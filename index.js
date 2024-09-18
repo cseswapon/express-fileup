@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 // Define the upload directory
-const uploadDirectory ='/tmp/uploads' || path.join(__dirname, "uploads");
+const uploadDirectory = "/var/task/temp/" || path.join(__dirname, "uploads");
 
 // Ensure the upload directory exists
 if (!fs.existsSync(uploadDirectory)) {
