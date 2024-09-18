@@ -3,6 +3,13 @@ const fileUpload = require("express-fileupload");
 const path = require("path");
 const cors = require("cors");
 const app = express();
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dqxz8bsv3",
+  api_key: "681224826957516",
+  api_secret: "9oaqf1b4W3NVl5VNIIovj0qtv3M",
+});
 
 app.use(cors());
 app.use(
@@ -28,8 +35,9 @@ app.post("/upload", async (req, res) => {
       return res.status(400).send("No file uploaded");
     }
 
-    let uploadedFile = req.files.file;
-    /* 
+      
+      let uploadedFile = req.files.file;
+    /*
       // Check if file with the same name already exists in DB
     const existingFile = await File.findOne({ name: uploadedFile.name });
 
@@ -40,8 +48,8 @@ app.post("/upload", async (req, res) => {
       });
     }
       */
-    let uploadPath = path.join(__dirname, "uploads", uploadedFile.name);
-    await uploadedFile.mv(uploadPath);
+    let uploadPath = path.join(__dirname, "temp", uploadedFile.name);
+     await uploadedFile.mv(uploadPath);
     /* // Store file details in MongoDB
     const newFile = new File({
       name: uploadedFile.name,
@@ -51,7 +59,9 @@ app.post("/upload", async (req, res) => {
     });
 
     await newFile.save(); */
-    res.status(200).send({
+   
+      
+      res.status(200).send({
       status: true,
       message: "File uploaded successfully",
       data: {
@@ -59,7 +69,21 @@ app.post("/upload", async (req, res) => {
         mimetype: uploadedFile.mimetype,
         size: uploadedFile.size,
       },
-    });
+      
+    }); 
+      
+      /*  const result = await cloudinary.uploader.upload(
+         uploadedFile.tempFilePath,
+         {
+           resource_type: "auto",
+         }
+       );
+
+       res.status(200).send({
+         status: true,
+         message: "File uploaded successfully to Cloudinary",
+         data: result,
+       }); */
   } catch (err) {
     res.status(500).send(err);
   }
